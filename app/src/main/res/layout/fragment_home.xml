@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C8C6D7"
+    tools:context=".ui.home.HomeFragment">
+
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:gravity="center"
+       android:orientation="vertical"
+       android:layout_centerInParent="true"
+       android:layout_height="wrap_content">
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:fontFamily="@font/poppins_bold"
+           android:textColor="#000"
+           android:textSize="24dp"
+           android:textAlignment="center"
+           android:layout_marginBottom="24dp"
+           android:text="CORONAVIRUS \n Global cases"
+           />
+
+    <TextView
+
+       android:id="@+id/labeltotalConfirmed"
+       style="@style/LabelFontStyle"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Total Confirmed"
+       android:textColor="#000" />
+
+       <TextView
+
+           android:id="@+id/totalConfirmed"
+           style="@style/TotalFontStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           tools:text="1234556"
+           android:textColor="@color/colorTotalConfirmed"/>
+       <TextView
+
+           android:id="@+id/labeltotalDeaths"
+           style="@style/LabelFontStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Total Deaths"
+           android:textColor="#000" />
+
+       <TextView
+
+           android:id="@+id/totalDeaths"
+           style="@style/TotalFontStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           tools:text="1234556"
+           android:textColor="@color/colorTotalDeaths"/>
+       <TextView
+
+           android:id="@+id/labeltotalRecovered"
+           style="@style/LabelFontStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Total Recovered"
+           android:textColor="#000" />
+
+       <TextView
+
+           android:id="@+id/totalRecovered"
+           style="@style/TotalFontStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           tools:text="1234556"
+           android:textColor="@color/colorTotalRecovered"/>
+
+   </LinearLayout>
+
+
+
+
+
+
+</RelativeLayout>
