@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +40,9 @@ ArrayList<CovidCountry> covidCountries;
         View root = inflater.inflate(R.layout.fragment_country, container, false);
         rvcovidCountries= root.findViewById(R.id.covidCountry);
         rvcovidCountries.setLayoutManager(new LinearLayoutManager(getActivity()));
+        DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(rvcovidCountries.getContext(),DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.linedivider));
+        rvcovidCountries.addItemDecoration(dividerItemDecoration);
         //call volley  method;
         getDataFromServer();
 

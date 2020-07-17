@@ -22,12 +22,16 @@ import com.example.coronavirus_tracker.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class HomeFragment extends Fragment {
 
 
 private TextView totalConfirmed;
     private TextView totalDeaths;
     private TextView totalRecovered;
+    private TextView lastUpdated;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,10 +41,19 @@ private TextView totalConfirmed;
         totalConfirmed= root.findViewById(R.id.totalConfirmed);
         totalDeaths= root.findViewById(R.id.totalDeaths);
         totalRecovered= root.findViewById(R.id.totalRecovered);
+        lastUpdated= root.findViewById(R.id.lastUpdated);
+
 
        getData();
 
         return root;
+    }
+    private String getDate(long millisecond){
+        SimpleDateFormat formatter= new SimpleDateFormat("EEE,dd/MM/yyyy hh:mm:ss aaa");
+        Calendar calendar= Calendar.getInstance();
+        calendar.setTimeInMillis(millisecond);
+        return formatter.format(calendar.getTime());
+
     }
     public void getData(){
         RequestQueue queue= Volley.newRequestQueue(getActivity());
@@ -53,6 +66,7 @@ private TextView totalConfirmed;
                     totalConfirmed.setText(jsonObject.getString("cases"));
                     totalDeaths.setText(jsonObject.getString("deaths"));
                     totalRecovered.setText(jsonObject.getString("recovered"));
+                    lastUpdated.setText("Last Updated" +"\n" + getDate(jsonObject.getLong("updated")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

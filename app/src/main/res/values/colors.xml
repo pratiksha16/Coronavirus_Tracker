@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
 
-    <color name="colorTotalConfirmed">#e60000</color>
-    <color name="colorTotalDeaths">#999999</color>
+    <color name="colorTotalConfirmed">#fff</color>
+    <color name="colorTotalDeaths">#e60000</color>
     <color name="colorTotalRecovered">#7bb974</color>
 </resources>
