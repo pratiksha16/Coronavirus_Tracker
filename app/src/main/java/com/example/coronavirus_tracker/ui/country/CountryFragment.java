@@ -1,5 +1,6 @@
 package com.example.coronavirus_tracker.ui.country;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,11 +35,13 @@ public class CountryFragment extends Fragment {
 
 RecyclerView rvcovidCountries;
 ArrayList<CovidCountry> covidCountries;
+TextView tvTotalCountry;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_country, container, false);
         rvcovidCountries= root.findViewById(R.id.covidCountry);
+        tvTotalCountry=root.findViewById(R.id.tvTotalCountries);
         rvcovidCountries.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(rvcovidCountries.getContext(),DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.linedivider));
@@ -52,6 +55,20 @@ ArrayList<CovidCountry> covidCountries;
 private void showRecyclerView(){
         CovidCountryAdapter covidCountryAdapter= new CovidCountryAdapter(covidCountries,getActivity());
         rvcovidCountries.setAdapter(covidCountryAdapter);
+
+        ItemClickSupport.addTo(rvcovidCountries).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                showSelectedCovidCountry(covidCountries.get(position));
+            }
+        });
+
+}
+
+private void showSelectedCovidCountry(CovidCountry covidCountry){
+        Intent covidCountryDetail = new Intent(getActivity(),CovidCountryDetail.class);
+        covidCountryDetail.putExtra("EXTRA_COVID",covidCountry );
+        startActivity(covidCountryDetail);
 
 }
     private void getDataFromServer() {
@@ -67,9 +84,15 @@ private void showRecyclerView(){
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject data = jsonArray.getJSONObject(i);
                             JSONObject countryInfo= data.getJSONObject("countryInfo");
-                            covidCountries.add(new CovidCountry(data.getString("country"), data.getString("cases"),countryInfo.getString("flag")));
+                            covidCountries.add(new CovidCountry(data.getString("country"), data.getString("cases"),
+                                    data.getString("todayCases"), data.getString("deaths"),
+                                    data.getString("todayDeaths"), data.getString("recovered"),
+                                    data.getString("critical"),data.getString("active"),
+                                    countryInfo.getString("flag")
+                                    ));
 
                         }
+                        tvTotalCountry.setText(jsonArray.length()+" countries");
                         showRecyclerView();
                     } catch (JSONException e) {
                         e.printStackTrace();
