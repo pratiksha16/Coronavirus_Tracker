@@ -42,7 +42,8 @@ private TextView totalConfirmed;
         totalDeaths= root.findViewById(R.id.totalDeaths);
         totalRecovered= root.findViewById(R.id.totalRecovered);
         lastUpdated= root.findViewById(R.id.lastUpdated);
-
+        //action bar title
+        getActivity().setTitle("Overview");
 
        getData();
 

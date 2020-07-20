@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,30 +34,36 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CountryFragment extends Fragment {
 
 RecyclerView rvcovidCountries;
-ArrayList<CovidCountry> covidCountries;
-TextView tvTotalCountry;
+List<CovidCountry> covidCountries;
+
+CovidCountryAdapter covidCountryAdapter;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_country, container, false);
+
+        //set has option menu
+        setHasOptionsMenu(true);
+
         rvcovidCountries= root.findViewById(R.id.covidCountry);
-        tvTotalCountry=root.findViewById(R.id.tvTotalCountries);
         rvcovidCountries.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(rvcovidCountries.getContext(),DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.linedivider));
         rvcovidCountries.addItemDecoration(dividerItemDecoration);
+        //call covid countris
+        covidCountries = new ArrayList<>();
         //call volley  method;
         getDataFromServer();
-
 
         return root;
     }
 private void showRecyclerView(){
-        CovidCountryAdapter covidCountryAdapter= new CovidCountryAdapter(covidCountries,getActivity());
+        covidCountryAdapter= new CovidCountryAdapter(covidCountries,getActivity());
         rvcovidCountries.setAdapter(covidCountryAdapter);
 
         ItemClickSupport.addTo(rvcovidCountries).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -73,7 +83,7 @@ private void showSelectedCovidCountry(CovidCountry covidCountry){
 }
     private void getDataFromServer() {
         String url = "https://corona.lmao.ninja/v2/countries";
-        covidCountries = new ArrayList<>();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -92,7 +102,9 @@ private void showSelectedCovidCountry(CovidCountry covidCountry){
                                     ));
 
                         }
-                        tvTotalCountry.setText(jsonArray.length()+" countries");
+//                        tvTotalCountry.setText(jsonArray.length()+" countries");
+                        //change action bar ttile
+                        getActivity().setTitle(jsonArray.length()+ " countries");;
                         showRecyclerView();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -109,7 +121,32 @@ private void showSelectedCovidCountry(CovidCountry covidCountry){
     });
         Volley.newRequestQueue(getActivity()).add(stringRequest);
 
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.search,menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView  = new SearchView(getActivity());
+        searchView.setQueryHint("Search");
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(covidCountryAdapter!=null){
+                    covidCountryAdapter.getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
+        searchItem.setActionView(searchView);
+
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
 }

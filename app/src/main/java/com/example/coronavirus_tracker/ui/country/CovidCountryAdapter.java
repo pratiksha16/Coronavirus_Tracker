@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,14 +17,18 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.coronavirus_tracker.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CovidCountryAdapter extends RecyclerView.Adapter<CovidCountryAdapter.ViewHolder> {
+public class CovidCountryAdapter extends RecyclerView.Adapter<CovidCountryAdapter.ViewHolder> implements Filterable {
 
-ArrayList<CovidCountry>covidCountries;
+private List<CovidCountry>covidCountries;
+private List<CovidCountry>covidCountriesFull;
+
 private Context context;
-public CovidCountryAdapter(ArrayList<CovidCountry>covidCountries, Context context){
+public CovidCountryAdapter(List<CovidCountry>covidCountries, Context context){
     this.covidCountries= covidCountries;
     this.context= context;
+    covidCountriesFull= new ArrayList<>(covidCountries);
 }
     @NonNull
     @Override
@@ -66,9 +72,39 @@ public CovidCountryAdapter(ArrayList<CovidCountry>covidCountries, Context contex
             countryName= itemView.findViewById(R.id.countryName);
             imgFlag= itemView.findViewById(R.id.countryFlag);
 
-
-
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return covidCountriesFilter;
+    }
+
+    private Filter covidCountriesFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<CovidCountry> filterCovidCountry = new ArrayList<>();
+            if(constraint == null || constraint.length()==0){
+                filterCovidCountry.addAll(covidCountriesFull);
+            } else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for(CovidCountry itemCovidCountry:covidCountriesFull){
+                    if(itemCovidCountry.getCovidCountry().toLowerCase().contains(filterPattern)){
+                        filterCovidCountry.add(itemCovidCountry);
+                    }
+                }
+            }
+            FilterResults results= new FilterResults();
+            results.values=filterCovidCountry;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            covidCountries.clear();
+            covidCountries.addAll((List)results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
 
